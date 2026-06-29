@@ -60,27 +60,30 @@ app.use(session({
 app.post('/api/login', (req, res) => {
   const { password } = req.body;
 
-  // eslint-disable-next-line no-undef
   if (password !== process.env.ACCESS_CODE) {
     return res.status(401).json({ success: false });
   }
+
+  console.log("LOGIN ID BEFORE:", req.sessionID);
 
   req.session.authorized = true;
 
   req.session.save((err) => {
     if (err) {
-      console.error("SAVE ERROR:", err);
-      return res.status(500).json({ success: false });
+      console.error(err);
+      return res.sendStatus(500);
     }
 
-    console.log("LOGIN SESSION:", req.session);
+    console.log("LOGIN ID AFTER:", req.sessionID);
+    console.log(req.session);
 
     res.json({ success: true });
   });
 });
 
 app.get('/api/me', (req, res) => {
-  console.log("ME SESSION:", req.session);
+  console.log("ME ID:", req.sessionID);
+  console.log(req.session);
 
   res.json({
     authorized: !!req.session.authorized
