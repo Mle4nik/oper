@@ -27,8 +27,7 @@ app.set('trust proxy', 1);
 
 app.use(session({
   // eslint-disable-next-line no-undef
-  // secret: process.env.SESSION_SECRET,
-  secret: "test-secret-123",
+  secret: process.env.SESSION_SECRET || "TEMP_SECRET",
   resave: false,
   saveUninitialized: false,
   cookie: {
