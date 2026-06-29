@@ -17,8 +17,24 @@ app.get('/', (req, res) => {
   res.send('Backend is running');
 });
 
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://oper-xi.vercel.app"
+];
+
 app.use(cors({
-  origin: "https://oper-xi.vercel.app",
+  origin: function (origin, callback) {
+
+    if (!origin) {
+      return callback(null, true);
+    }
+
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+
+    callback(new Error("Not allowed by CORS"));
+  },
   credentials: true
 }));
 
@@ -108,8 +124,8 @@ app.get('/api/templates', (req, res) => {
   }
 
   const tree = getTree(
-        path.join(__dirname, "templates")
-    );
+    path.join(__dirname, "templates")
+  );
 
   res.json(tree);
 
@@ -118,13 +134,13 @@ app.get('/api/templates', (req, res) => {
 
 app.get('/api/download', (req, res) => {
 
-    const filePath = path.join(
-        __dirname,
-        "templates",
-        req.query.path
-    );
+  const filePath = path.join(
+    __dirname,
+    "templates",
+    req.query.path
+  );
 
-    res.download(filePath);
+  res.download(filePath);
 
 });
 
