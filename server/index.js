@@ -23,8 +23,9 @@ const allowedOrigins = [
 ];
 
 app.use(cors({
-  origin: function (origin, callback) {
+  origin: (origin, callback) => {
 
+    // запросы без origin (Postman, curl)
     if (!origin) {
       return callback(null, true);
     }
@@ -33,25 +34,29 @@ app.use(cors({
       return callback(null, true);
     }
 
-    callback(new Error("Not allowed by CORS"));
+    return callback(null, false);
   },
   credentials: true
 }));
 
 app.use(express.json());
 
-app.set('trust proxy', 1);
+app.set("trust proxy", 1);
 
 app.use(session({
-  // eslint-disable-next-line no-undef
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
+
   cookie: {
     maxAge: 24 * 60 * 60 * 1000,
     httpOnly: true,
-    sameSite: "none",
-    secure: true
+
+    secure: process.env.NODE_ENV === "production",
+
+    sameSite: process.env.NODE_ENV === "production"
+      ? "none"
+      : "lax"
   }
 }));
 
