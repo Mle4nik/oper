@@ -18,10 +18,7 @@ app.get('/', (req, res) => {
 });
 
 app.use(cors({
-  origin: [
-    "http://localhost:5173",
-    "https://oper-xi.vercel.app"
-  ],
+  origin: "https://oper-xi.vercel.app",
   credentials: true
 }));
 
@@ -31,7 +28,7 @@ app.set('trust proxy', 1);
 
 app.use(session({
   // eslint-disable-next-line no-undef
-  secret: process.env.SESSION_SECRET || "TEMP_SECRET",
+  secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
   cookie: {

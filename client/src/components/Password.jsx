@@ -19,15 +19,21 @@ const Password = ({ setLoading }) => {
     }
   };
 
+  const [checking, setChecking] = useState(false);
+
   useEffect(() => {
+
     const checkPassword = async () => {
+      if (checking) return;
       if (!values.every((v) => v !== '')) return;
+
+      setChecking(true);
 
       const userPass = values.join('');
 
       try {
         const response = await fetch(
-          'http://localhost:3001/api/login',
+          `${import.meta.env.VITE_API_URL}/api/login`,
           {
             method: 'POST',
             credentials: 'include',
@@ -42,31 +48,42 @@ const Password = ({ setLoading }) => {
 
         const data = await response.json();
 
-        console.log(response.status);
-        console.log(data);
-
         if (data.success) {
           setLoading(true);
+
+          fetch(
+            `${import.meta.env.VITE_API_URL}/api/me`,
+            {
+              credentials: "include"
+            }
+          )
+            .then(r => r.json())
+
 
           setTimeout(() => {
             navigate('/docs');
           }, 2000);
+
         } else {
           setError(true);
 
           setTimeout(() => {
             setValues(Array(length).fill(''));
             setError(false);
+            setChecking(false);
             focusAt(0);
           }, 500);
         }
+
       } catch (err) {
         console.error(err);
+        setChecking(false);
       }
     };
 
     checkPassword();
-  }, [navigate, setLoading, values]);
+
+  }, [values, checking, navigate, setLoading]);
 
   const handleChange = (e, index) => {
     let val = e.target.value.replace(/\D/g, ''); // только цифры

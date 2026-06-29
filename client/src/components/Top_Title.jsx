@@ -44,11 +44,11 @@ const Top_Title = () => {
         <div>
             <div className="max-w-[1480px] m-auto flex justify-between items-center text-[#2D77D6] text-3xl font-bold ml-3xl p-3">
                 <h1 className="ml-[13px]">
-                    <spam className="text-black">ОПЕРАТОР</spam> 1С
+                    <span className="text-black">ОПЕРАТОР</span> 1С
                 </h1>
                 <div className='flex mr-5'>
                     <div className='trasition-all duration-150 items-center text-black font-normal text-sm flex hover:-translate-y-[1px]'>
-                        <spam className="ml-1.5 relative left-7">🔍</spam>
+                        <span className="ml-1.5 relative left-7">🔍</span>
                         <input className={`focus:shadow-md trasition-all duration-150 hover:bg-gray-50 shadow-sm hover:shadow-md focus:border-[#2D77D6] focus:border-2 rounded-xl w-auto border-1 border-gray-300 focus:outline-none py-2 px-3 pl-8`} type="text" placeholder="Поиск по документации..." />
                     </div>
                     <div className='text-sm flex flex-col justify-end items-end'>

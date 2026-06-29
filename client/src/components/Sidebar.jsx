@@ -49,12 +49,8 @@ const SidebarAccordion = ({ title, open, setOpen, children }) => {
             </div>
 
             <div
-                inert={!open ? "" : undefined}
-                className={`
-                    pl-5
-                    overflow-hidden
-                    transition-all
-                    duration-200
+                inert={!open}
+                className={`pl-5 overflow-hidden transition-all duration-200
                     ${open
                         ? "max-h-[400px] opacity-100"
                         : "max-h-0 opacity-0"
