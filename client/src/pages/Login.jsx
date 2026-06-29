@@ -38,19 +38,25 @@ function Login() {
           </div>
         </div>
         {/* <p className="font-bold mb-4">введи код доступа</p> */}
-        {errorMessage ?
-          <p className="text-red-700 font-bold mb-4">
+        {errorMessage ? (
+          <div className="
+    mb-4
+    text-red-700
+    font-bold
+  ">
             {errorMessage}
+          </div>
+        ) : (
+          <p className="font-bold mb-4">
+            введи код доступа
           </p>
-          :
-          <p className="font-bold mb-4">введи код доступа</p>
-        }
+        )}
         <ul className="flex justify-between">
           <Password setLoading={setLoading} setErrorMessage={setErrorMessage} />
         </ul>
       </div>
 
-      <div class="waves">
+      <div className="waves">
         <svg viewBox="0 0 1440 320" preserveAspectRatio="none">
           <defs>
             <linearGradient id="waveGradient1" x1="0" x2="1">
@@ -66,17 +72,17 @@ function Login() {
             </linearGradient>
           </defs>
 
-          <path class="wave wave1"
+          <path className="wave wave1"
             fill="url(#waveGradient1)"
             d="M0,160 C360,260 720,60 1440,160 V500 H0 Z">
           </path>
 
-          <path class="wave wave2"
+          <path className="wave wave2"
             fill="url(#waveGradient2)"
             d="M0,220 C360,120 720,300 1440,200 V500 H0 Z">
           </path>
 
-          <path class="wave wave3"
+          <path className="wave wave3"
             fill="#075985"
             opacity="0.25"
             d="M0,180 C400,320 900,40 1440,180 V500 H0 Z">

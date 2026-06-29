@@ -51,17 +51,16 @@ const Password = ({ setLoading, setErrorMessage }) => {
         if (response.status === 429) {
 
           setError(true);
+
           setErrorMessage(
-            "слишком много попыток входа. попробуй позже."
+            data.message || "Слишком много попыток. Попробуйте позже."
           );
 
           setTimeout(() => {
             setError(false);
             setErrorMessage("");
-            setValues(Array(length).fill(""));
             setChecking(false);
-            focusAt(0);
-          }, 3000);
+          }, 5000);
 
           return;
         }
@@ -70,7 +69,12 @@ const Password = ({ setLoading, setErrorMessage }) => {
         if (response.status === 401) {
 
           setError(true);
-          setErrorMessage("неверный код доступа");
+
+          setErrorMessage(
+            data.remaining !== undefined
+              ? `Неверный код. Осталось попыток: ${data.remaining}`
+              : "Неверный код доступа"
+          );
 
           setTimeout(() => {
             setValues(Array(length).fill(""));
@@ -78,36 +82,21 @@ const Password = ({ setLoading, setErrorMessage }) => {
             setErrorMessage("");
             setChecking(false);
             focusAt(0);
-          }, 1000);
+          }, 1500);
 
           return;
         }
 
+
         if (data.success) {
+
           setLoading(true);
-
-          fetch(
-            `${import.meta.env.VITE_API_URL}/api/me`,
-            {
-              credentials: "include"
-            }
-          )
-            .then(r => r.json())
-
 
           setTimeout(() => {
             navigate('/docs');
           }, 2000);
 
-        } else {
-          setError(true);
-
-          setTimeout(() => {
-            setValues(Array(length).fill(''));
-            setError(false);
-            setChecking(false);
-            focusAt(0);
-          }, 500);
+          return;
         }
 
       } catch (err) {

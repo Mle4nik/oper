@@ -59,34 +59,53 @@ app.use(session({
 }));
 
 const loginLimiter = rateLimit({
-  windowMs: 5 * 60 * 1000,  // 15 минут
-  max: 5,                   // максимум 5 попыток
+  windowMs: 5 * 60 * 1000,
+  limit: 5,
+
   standardHeaders: true,
   legacyHeaders: false,
-  message: {
-    success: false,
-    message: "Too many login attempts. Try again later."
+
+  handler: (req, res) => {
+
+    res.status(429).json({
+      success: false,
+      error: "TOO_MANY_REQUESTS",
+      message: "Попытки закончились. Попробуйте через 5 минут."
+    });
+
   }
 });
 
 app.post('/api/login', loginLimiter, (req, res) => {
+
   const { password } = req.body;
 
   // eslint-disable-next-line no-undef
   if (password !== process.env.ACCESS_CODE) {
-    return res.status(401).json({ success: false });
+
+    const remaining =
+      req.rateLimit?.remaining ?? 0;
+
+    return res.status(401).json({
+      success: false,
+      message: "Неверный код",
+      remaining
+    });
+
   }
 
   req.session.authorized = true;
 
   req.session.save((err) => {
     if (err) {
-      console.error(err);
       return res.sendStatus(500);
     }
 
-    res.json({ success: true });
+    res.json({
+      success: true
+    });
   });
+
 });
 
 app.get('/api/me', (req, res) => {
