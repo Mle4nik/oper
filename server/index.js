@@ -18,7 +18,10 @@ app.get('/', (req, res) => {
 });
 
 app.use(cors({
-  origin: 'http://localhost:5173',
+  origin: [
+    "http://localhost:5173",
+    "https://oper-xi.vercel.app"
+  ],
   credentials: true
 }));
 
@@ -34,8 +37,8 @@ app.use(session({
   cookie: {
     maxAge: 24 * 60 * 60 * 1000,
     httpOnly: true,
-    sameSite: "lax",
-    secure: false
+    sameSite: "none",
+    secure: true
   }
 }));
 
