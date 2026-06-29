@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Password.css';
 
-const Password = ({ setLoading }) => {
+const Password = ({ setLoading, setErrorMessage }) => {
 
   const [error, setError] = useState(false);
 
@@ -48,6 +48,41 @@ const Password = ({ setLoading }) => {
 
         const data = await response.json();
 
+        if (response.status === 429) {
+
+          setError(true);
+          setErrorMessage(
+            "слишком много попыток входа. попробуй позже."
+          );
+
+          setTimeout(() => {
+            setError(false);
+            setErrorMessage("");
+            setValues(Array(length).fill(""));
+            setChecking(false);
+            focusAt(0);
+          }, 3000);
+
+          return;
+        }
+
+
+        if (response.status === 401) {
+
+          setError(true);
+          setErrorMessage("неверный код доступа");
+
+          setTimeout(() => {
+            setValues(Array(length).fill(""));
+            setError(false);
+            setErrorMessage("");
+            setChecking(false);
+            focusAt(0);
+          }, 1000);
+
+          return;
+        }
+
         if (data.success) {
           setLoading(true);
 
@@ -83,7 +118,7 @@ const Password = ({ setLoading }) => {
 
     checkPassword();
 
-  }, [values, checking, navigate, setLoading]);
+  }, [values, checking, navigate, setLoading, setErrorMessage]);
 
   const handleChange = (e, index) => {
     let val = e.target.value.replace(/\D/g, ''); // только цифры
@@ -194,7 +229,6 @@ const Password = ({ setLoading }) => {
             <Div key={i} index={i} />
           ))}
         </ul>
-
       </div>
     </>
   );

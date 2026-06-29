@@ -5,6 +5,7 @@ import session from 'express-session';
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import { rateLimit } from "express-rate-limit";
 
 dotenv.config();
 
@@ -57,14 +58,24 @@ app.use(session({
   }
 }));
 
-app.post('/api/login', (req, res) => {
+const loginLimiter = rateLimit({
+  windowMs: 5 * 60 * 1000,  // 15 минут
+  max: 5,                   // максимум 5 попыток
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    success: false,
+    message: "Too many login attempts. Try again later."
+  }
+});
+
+app.post('/api/login', loginLimiter, (req, res) => {
   const { password } = req.body;
 
+  // eslint-disable-next-line no-undef
   if (password !== process.env.ACCESS_CODE) {
     return res.status(401).json({ success: false });
   }
-
-  console.log("LOGIN ID BEFORE:", req.sessionID);
 
   req.session.authorized = true;
 
@@ -74,17 +85,11 @@ app.post('/api/login', (req, res) => {
       return res.sendStatus(500);
     }
 
-    console.log("LOGIN ID AFTER:", req.sessionID);
-    console.log(req.session);
-
     res.json({ success: true });
   });
 });
 
 app.get('/api/me', (req, res) => {
-  console.log("ME ID:", req.sessionID);
-  console.log(req.session);
-
   res.json({
     authorized: !!req.session.authorized
   });

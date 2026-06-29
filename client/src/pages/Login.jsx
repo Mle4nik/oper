@@ -6,6 +6,8 @@ import Typewriter from '../components/Typewriter';
 function Login() {
 
   const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
 
   if (loading) {
     return (
@@ -35,9 +37,16 @@ function Login() {
             </h1>
           </div>
         </div>
-        <p className="font-bold mb-4">введи код доступа</p>
+        {/* <p className="font-bold mb-4">введи код доступа</p> */}
+        {errorMessage ?
+          <p className="text-red-700 font-bold mb-4">
+            {errorMessage}
+          </p>
+          :
+          <p className="font-bold mb-4">введи код доступа</p>
+        }
         <ul className="flex justify-between">
-          <Password setLoading={setLoading} />
+          <Password setLoading={setLoading} setErrorMessage={setErrorMessage} />
         </ul>
       </div>
 
