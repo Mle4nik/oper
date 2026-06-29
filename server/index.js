@@ -8,6 +8,9 @@ import { fileURLToPath } from "url";
 
 dotenv.config();
 
+// eslint-disable-next-line no-undef
+console.log("SESSION_SECRET:", process.env.SESSION_SECRET);
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -24,7 +27,8 @@ app.set('trust proxy', 1);
 
 app.use(session({
   // eslint-disable-next-line no-undef
-  secret: process.env.SESSION_SECRET,
+  // secret: process.env.SESSION_SECRET,
+  secret: "test-secret-123",
   resave: false,
   saveUninitialized: false,
   cookie: {
