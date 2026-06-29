@@ -60,19 +60,17 @@ app.use(session({
 
 const loginLimiter = rateLimit({
   windowMs: 5 * 60 * 1000,
-  limit: 5,
+  limit: 4,
 
   standardHeaders: true,
   legacyHeaders: false,
 
   handler: (req, res) => {
-
     res.status(429).json({
       success: false,
       error: "TOO_MANY_REQUESTS",
-      message: "Попытки закончились. Попробуйте через 5 минут."
+      message: "Слишком много попыток. Попробуйте позже."
     });
-
   }
 });
 
@@ -83,8 +81,15 @@ app.post('/api/login', loginLimiter, (req, res) => {
   // eslint-disable-next-line no-undef
   if (password !== process.env.ACCESS_CODE) {
 
-    const remaining =
-      req.rateLimit?.remaining ?? 0;
+    const remaining = req.rateLimit.remaining;
+
+    if (remaining === 0) {
+      return res.status(429).json({
+        success: false,
+        error: "TOO_MANY_REQUESTS",
+        message: "Слишком много попыток. Попробуйте позже."
+      });
+    }
 
     return res.status(401).json({
       success: false,
@@ -93,6 +98,7 @@ app.post('/api/login', loginLimiter, (req, res) => {
     });
 
   }
+
 
   req.session.authorized = true;
 

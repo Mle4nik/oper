@@ -41,8 +41,15 @@ function Login() {
         {errorMessage ? (
           <div className="
     mb-4
+    rounded-lg
+    border
+    border-red-300
+    bg-red-50
+    px-4
+    py-3
     text-red-700
     font-bold
+    animate-pulse
   ">
             {errorMessage}
           </div>

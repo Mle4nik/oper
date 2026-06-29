@@ -48,19 +48,16 @@ const Password = ({ setLoading, setErrorMessage }) => {
 
         const data = await response.json();
 
+
         if (response.status === 429) {
 
           setError(true);
 
           setErrorMessage(
-            data.message || "Слишком много попыток. Попробуйте позже."
+            "Слишком много попыток. Попробуйте позже."
           );
 
-          setTimeout(() => {
-            setError(false);
-            setErrorMessage("");
-            setChecking(false);
-          }, 5000);
+          setChecking(false);
 
           return;
         }
@@ -71,22 +68,25 @@ const Password = ({ setLoading, setErrorMessage }) => {
           setError(true);
 
           setErrorMessage(
-            data.remaining !== undefined
-              ? `Неверный код. Осталось попыток: ${data.remaining}`
-              : "Неверный код доступа"
+            `Неверный код. Осталось попыток: ${data.remaining}`
           );
 
+
           setTimeout(() => {
+
             setValues(Array(length).fill(""));
+
             setError(false);
-            setErrorMessage("");
+
             setChecking(false);
+
             focusAt(0);
+
           }, 1500);
+
 
           return;
         }
-
 
         if (data.success) {
 
