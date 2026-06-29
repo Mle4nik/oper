@@ -8,13 +8,14 @@ import { fileURLToPath } from "url";
 
 dotenv.config();
 
-// eslint-disable-next-line no-undef
-console.log("SESSION_SECRET:", process.env.SESSION_SECRET);
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
+
+app.get('/', (req, res) => {
+  res.send('Backend is running');
+});
 
 app.use(cors({
   origin: 'http://localhost:5173',
