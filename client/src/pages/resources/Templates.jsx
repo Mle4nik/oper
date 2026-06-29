@@ -84,9 +84,12 @@ function Templates() {
 
   const downloadFile = async (file) => {
 
-    const response = await fetch(`${import.meta.env.VITE_API_URL}/api/templates`, {
-      credentials: "include"
-    })
+    const response = await fetch(
+      `${import.meta.env.VITE_API_URL}/api/download?path=${encodeURIComponent(file)}`,
+      {
+        credentials: "include"
+      }
+    );
 
 
     const blob = await response.blob();
@@ -112,7 +115,7 @@ function Templates() {
   const [files, setFiles] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:3001/api/templates", {
+    fetch(`${import.meta.env.VITE_API_URL}/api/templates`, {
       credentials: "include"
     })
       .then(res => res.json())
