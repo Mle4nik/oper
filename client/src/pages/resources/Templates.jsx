@@ -84,12 +84,9 @@ function Templates() {
 
   const downloadFile = async (file) => {
 
-    const response = await fetch(
-      `http://localhost:3001/api/templates/${file}`,
-      {
-        credentials: "include"
-      }
-    );
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/api/templates`, {
+      credentials: "include"
+    })
 
 
     const blob = await response.blob();
