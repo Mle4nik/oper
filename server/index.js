@@ -44,6 +44,7 @@ app.use(express.json());
 app.set("trust proxy", 1);
 
 app.use(session({
+  // eslint-disable-next-line no-undef
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
@@ -61,19 +62,25 @@ app.post('/api/login', (req, res) => {
 
   // eslint-disable-next-line no-undef
   if (password !== process.env.ACCESS_CODE) {
-    return res.status(401).json({
-      success: false
-    });
+    return res.status(401).json({ success: false });
   }
 
   req.session.authorized = true;
 
-  res.json({
-    success: true
+  req.session.save((err) => {
+    if (err) {
+      console.error("SAVE ERROR:", err);
+      return res.status(500).json({ success: false });
+    }
+
+    console.log("LOGIN SESSION:", req.session);
+
+    res.json({ success: true });
   });
 });
 
 app.get('/api/me', (req, res) => {
+  console.log("ME SESSION:", req.session);
 
   res.json({
     authorized: !!req.session.authorized
